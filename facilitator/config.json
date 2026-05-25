@@ -1,0 +1,17 @@
+{
+  "host": "0.0.0.0",
+  "port": 8080,
+  "chains": {
+    "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1": {
+      "signer": "$SOLANA_PRIVATE_KEY",
+      "rpc": "https://api.devnet.solana.com"
+    }
+  },
+  "schemes": [
+    {
+      "id": "v2-solana-exact",
+      "chains": "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1"
+    }
+  ]
+}
+
