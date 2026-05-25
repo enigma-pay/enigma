@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enigma — Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@300;400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #0a0a0a;
+  --bg-2:   #111111;
+  --bg-3:   #161616;
+  --fg:     #f0f0f0;
+  --muted:  #888;
+  --dim:    #444;
+  --border: #222;
+  --border-soft: #181818;
+  --accent: oklch(0.78 0.16 145);
+  --accent-bg: oklch(0.78 0.16 145 / 0.07);
+  --accent-border: oklch(0.78 0.16 145 / 0.3);
+  --mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sidebar-w: 248px;
+  --topbar-h: 52px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--mono);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ── TOPBAR ── */
+#topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 16px; z-index: 100;
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--fg); text-decoration: none;
+  font-size: 13px; letter-spacing: 0.1em;
+  flex-shrink: 0;
+}
+.logo .mark {
+  width: 13px; height: 13px;
+  border: 1.5px solid var(--fg); position: relative;
+}
+.logo .mark::after {
+  content: ""; position: absolute; inset: 3px; background: var(--fg);
+}
+.top-divider { width: 1px; height: 18px; background: var(--border); }
+.top-ver { font-size: 11px; color: var(--dim); letter-spacing: 0.1em; flex-shrink: 0; }
+.top-search {
+  flex: 1; max-width: 260px; height: 30px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 12px; color: var(--dim);
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: 0.05em; cursor: text;
+}
+.top-links { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+.top-links a {
+  color: var(--muted); text-decoration: none;
+  font-size: 12px; letter-spacing: 0.08em;
+  transition: color 0.15s;
+}
+.top-links a:hover { color: var(--fg); }
+.top-links .cta { color: var(--accent) !important; }
+
+/* ── LAYOUT ── */
+#layout { display: flex; height: 100vh; padding-top: var(--topbar-h); }
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  overflow-y: auto; padding: 20px 0 40px;
+  background: var(--bg);
+}
+#sidebar::-webkit-scrollbar { width: 0; }
+.nav-group { margin-bottom: 4px; }
+.nav-group-label {
+  font-size: 10px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--dim);
+  padding: 14px 18px 5px;
+}
+.nav-link {
+  display: block; padding: 5px 18px;
+  color: var(--muted); text-decoration: none;
+  font-size: 12.5px; letter-spacing: 0.02em;
+  cursor: pointer; transition: color 0.1s, background 0.1s;
+  border-left: 2px solid transparent;
+}
+.nav-link:hover { color: var(--fg); background: var(--bg-2); }
+.nav-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-bg); }
+.nav-divider { height: 1px; background: var(--border); margin: 10px 18px; }
+
+/* ── CONTENT ── */
+#content { flex: 1; overflow-y: auto; padding: 48px 56px 100px; }
+#content::-webkit-scrollbar { width: 5px; }
+#content::-webkit-scrollbar-track { background: transparent; }
+#content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.doc-section {
+  max-width: 740px; margin: 0 auto;
+  padding-bottom: 60px; border-bottom: 1px solid var(--border-soft);
+  margin-bottom: 60px;
+}
+.doc-section:last-child { border-bottom: none; margin-bottom: 0; }
+
+/* ── TYPOGRAPHY ── */
+.eyebrow {
+  font-size: 10px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 10px;
+}
+.doc-h1 {
+  font-size: 30px; font-weight: 400;
+  letter-spacing: -0.02em; line-height: 1.15;
+  color: var(--fg); margin-bottom: 18px;
+}
+.doc-h2 {
+  font-size: 18px; font-weight: 400;
+  letter-spacing: -0.01em; color: var(--fg);
+  margin-top: 36px; margin-bottom: 12px;
+  padding-top: 36px; border-top: 1px solid var(--border);
+}
+.doc-h3 { font-size: 14px; font-weight: 500; color: var(--fg); margin-top: 24px; margin-bottom: 8px; }
+.doc-lead { font-size: 15px; color: rgba(240,240,240,0.75); line-height: 1.65; margin-bottom: 24px; }
+.doc-p { font-size: 13px; color: var(--muted); line-height: 1.75; margin-bottom: 12px; }
+.doc-p a { color: var(--accent); text-decoration: none; }
+.doc-p a:hover { text-decoration: underline; }
+code {
+  background: var(--bg-3); border: 1px solid var(--border);
+  padding: 1px 6px; font-family: var(--mono);
+  font-size: 11.5px; color: var(--fg); border-radius: 0;
+}
+
+/* ── CODE BLOCKS ── */
+.code-wrap { position: relative; margin: 14px 0; }
+.code-label {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg-3); border: 1px solid var(--border); border-bottom: none;
+  padding: 7px 14px; font-size: 10px; color: var(--dim);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+.copy-btn {
+  background: none; border: none; color: var(--dim);
+  cursor: pointer; font-family: var(--mono);
+  font-size: 10px; letter-spacing: 0.08em;
+  padding: 2px 6px; transition: color 0.15s;
+}
+.copy-btn:hover { color: var(--fg); }
+.code-block {
+  background: #050505; border: 1px solid var(--border);
+  padding: 16px 18px; font-size: 12.5px; line-height: 1.65;
+  color: var(--muted); overflow-x: auto; white-space: pre;
+  font-family: var(--mono);
+}
+.kw  { color: #c792ea; }
+.fn  { color: #82aaff; }
+.str { color: #c3e88d; }
+.com { color: #3d3d3d; }
+.num { color: #f78c6c; }
+.var { color: #f0f0f0; }
+.cls { color: #ffcb6b; }
+.op  { color: #89ddff; }
+.prompt { color: var(--accent); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex; border-bottom: 1px solid var(--border);
+  margin-bottom: 0; gap: 0;
+}
+.tab-btn {
+  background: none; border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--dim); font-family: var(--mono);
+  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 9px 16px; cursor: pointer;
+  transition: color 0.1s, border-color 0.1s;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--muted); }
+.tab-btn.active { color: var(--fg); border-bottom-color: var(--accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ── CALLOUTS ── */
+.callout {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  background: var(--accent-bg);
+  padding: 12px 16px; margin: 16px 0;
+  font-size: 12.5px; color: var(--muted); line-height: 1.65;
+}
+.callout strong { color: var(--fg); font-weight: 500; }
+.callout.warn {
+  border-left-color: #d6a85a;
+  background: oklch(0.75 0.12 65 / 0.06);
+}
+
+/* ── TABLES ── */
+.doc-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 12.5px; }
+.doc-table th {
+  text-align: left; color: var(--dim); font-weight: 400;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  border-bottom: 1px solid var(--border); padding: 9px 12px;
+}
+.doc-table td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border-soft);
+  color: var(--muted); vertical-align: top;
+}
+.doc-table td:first-child { color: var(--fg); }
+.doc-table tr:last-child td { border-bottom: none; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; margin: 14px 0; }
+.step-item {
+  display: grid; grid-template-columns: 36px 1fr; gap: 14px;
+  padding: 18px 0; border-bottom: 1px solid var(--border-soft);
+}
+.step-item:last-child { border-bottom: none; }
+.step-num { font-size: 10px; color: var(--dim); letter-spacing: 0.1em; padding-top: 2px; }
+.step-title { color: var(--fg); font-size: 13px; margin-bottom: 5px; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 3px 9px; border: 1px solid var(--border); color: var(--muted);
+}
+.badge.live { border-color: var(--accent-border); color: var(--accent); }
+.badge.live::before {
+  content: ''; width: 5px; height: 5px;
+  background: var(--accent); border-radius: 50%;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ── HTTP METHOD BADGES ── */
+.method {
+  display: inline-block; padding: 2px 7px;
+  font-size: 10px; letter-spacing: 0.1em; font-weight: 600; border: 1px solid;
+}
+.method.get { color: #82aaff; border-color: #82aaff30; background: #82aaff08; }
+.method.post { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
+
+/* ── ENDPOINT ROWS ── */
+.endpoint-row {
+  display: grid; grid-template-columns: 52px 1fr; gap: 14px;
+  align-items: baseline; padding: 13px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.endpoint-row:last-child { border-bottom: none; }
+.endpoint-path { color: var(--fg); font-size: 12.5px; }
+.endpoint-desc { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+/* ── FAQ ── */
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  padding: 14px 0; color: var(--fg); font-size: 13px;
+  cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; gap: 16px; user-select: none;
+  transition: color 0.15s;
+}
+.faq-q:hover { color: var(--accent); }
+.faq-arrow {
+  color: var(--dim); font-size: 16px; flex-shrink: 0;
+  transition: transform 0.2s; line-height: 1;
+}
+.faq-item.open .faq-arrow { transform: rotate(45deg); }
+.faq-a {
+  padding: 0 0 14px; color: var(--muted);
+  font-size: 12.5px; line-height: 1.75; display: none;
+}
+.faq-item.open .faq-a { display: block; }
+
+/* ── CHECKLIST ── */
+.checklist { list-style: none; display: flex; flex-direction: column; gap: 7px; margin: 12px 0; }
+.checklist li { color: var(--muted); font-size: 13px; display: flex; gap: 10px; }
+.checklist .ck { color: var(--accent); flex-shrink: 0; }
+
+/* ── SCROLL FADE ── */
+.scroll-fade {
+  position: fixed; bottom: 0;
+  left: var(--sidebar-w); right: 0; height: 50px;
+  background: linear-gradient(transparent, var(--bg));
+  pointer-events: none; z-index: 10;
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <a class="logo" href="#">
+    <span class="mark"></span>
+    <span>enigma</span>
+  </a>
+  <div class="top-divider"></div>
+  <span class="top-ver">docs · v0.1-devnet</span>
+  <div class="top-search">
+    <span style="color:var(--dim);">_</span>
+    <span>search docs…</span>
+  </div>
+  <div class="top-links">
+    <a href="#">github</a>
+    <a href="#">discord</a>
+    <a href="#" class="cta">launch app →</a>
+  </div>
+</header>
+
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="nav-group">
+      <div class="nav-group-label">Getting Started</div>
+      <a class="nav-link active" data-target="what-is-enigma">What is Enigma</a>
+      <a class="nav-link" data-target="quickstart">Quick Start</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <div class="nav-group-label">For Providers</div>
+      <a class="nav-link" data-target="register-api">Register an API</a>
+      <a class="nav-link" data-target="pricing-fees">Pricing &amp; Fees</a>
+      <a class="nav-link" data-target="collecting-revenue">Collecting Revenue</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <div class="nav-group-label">For Callers</div>
+      <a class="nav-link" data-target="buyer-guide">Buyer Guide</a>
+      <a class="nav-link" data-target="wallet-setup">Wallet &amp; USDC Setup</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <div class="nav-group-label">SDK</div>
+      <a class="nav-link" data-target="sdk-install">Installation</a>
+      <a class="nav-link" data-target="sdk-provider">Provider SDK</a>
+      <a class="nav-link" data-target="sdk-caller">Caller SDK</a>
+      <a class="nav-link" data-target="sdk-config">Configuration</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <div class="nav-group-label">API Reference</div>
+      <a class="nav-link" data-target="api-auth">Authentication</a>
+      <a class="nav-link" data-target="api-endpoints">Endpoints</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <div class="nav-group-label">Security</div>
+      <a class="nav-link" data-target="trust-model">Trust Model</a>
+      <a class="nav-link" data-target="non-custodial">Non-Custodial Design</a>
+    </div>
+    <div class="nav-divider"></div>
+    <div class="nav-group">
+      <a class="nav-link" data-target="faq">FAQ</a>
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main id="content">
+
+    <!-- ─── WHAT IS ENIGMA ─── -->
+    <div class="doc-section" id="what-is-enigma">
+      <div class="eyebrow">getting started</div>
+      <h1 class="doc-h1">What is Enigma?</h1>
+      <div style="display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;">
+        <span class="badge live">devnet live</span>
+        <span class="badge">v0.1</span>
+        <span class="badge">solana · usdc</span>
+      </div>
+      <p class="doc-lead">Enigma is a non-custodial API billing platform built on Solana. It turns any HTTP endpoint into a paid product in about three minutes — with zero code changes to your upstream service.</p>
+      <p class="doc-p">If you've built an API and want to charge for it, Enigma handles everything: authentication, per-request metering, USDC settlement, and revenue collection. Payment lands directly in a program-derived account (PDA) that only you control — Enigma never touches your funds.</p>
+
+      <h2 class="doc-h2">How it works</h2>
+      <p class="doc-p">Enigma sits between callers and your real API as a smart proxy. On every request:</p>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">caller authenticates &amp; pays</div>
+            <p class="doc-p">The caller sends a payment authorization alongside the HTTP request. Enigma validates it before forwarding anything upstream.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">proxy meters &amp; settles on Solana</div>
+            <p class="doc-p">Enigma submits an on-chain transaction, crediting the developer's PDA vault with USDC. Sub-second finality means this completes within the request lifecycle.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">upstream response forwarded</div>
+            <p class="doc-p">The caller receives your API's response. Your revenue sits in your PDA, ready to sweep anytime. No invoicing. No waiting.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2">Key concepts</h2>
+      <table class="doc-table">
+        <thead><tr><th>concept</th><th>what it means</th></tr></thead>
+        <tbody>
+          <tr><td><code>proxy url</code></td><td>Your metered endpoint. Format: <code>api.enigma.sh/{you}/{api}</code>. Share this with callers.</td></tr>
+          <tr><td><code>pda vault</code></td><td>A program-derived USDC token account on Solana, seeded by your wallet. Only you can sweep it.</td></tr>
+          <tr><td><code>upstream url</code></td><td>Your real API. Enigma forwards requests here after payment is confirmed. Never exposed to callers.</td></tr>
+          <tr><td><code>price / request</code></td><td>USDC amount a caller pays per proxied request. Set by you, stored on-chain, changeable anytime.</td></tr>
+          <tr><td><code>collect_balance</code></td><td>The on-chain instruction that sweeps your PDA revenue to your wallet, minus the platform fee.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Non-custodial guarantee —</strong> Enigma never holds your money. Even if we disappear tomorrow, your PDA balance remains recoverable on-chain through the program directly.
+      </div>
+    </div>
+
+    <!-- ─── QUICK START ─── -->
+    <div class="doc-section" id="quickstart">
+      <div class="eyebrow">getting started</div>
+      <h1 class="doc-h1">Quick Start</h1>
+      <p class="doc-lead">Zero to a paid API in under five minutes.</p>
+
+      <div class="tabs" id="qs-tabs">
+        <button class="tab-btn active" data-tab="qs-provider">I want to sell an API</button>
+        <button class="tab-btn" data-tab="qs-caller">I want to call a paid API</button>
+      </div>
+
+      <div class="tab-content active" id="qs-provider">
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">01</div>
+            <div>
+              <div class="step-title">install the SDK</div>
+              <div class="code-wrap">
+                <div class="code-label">terminal <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                <div class="code-block"><span class="prompt">$</span> npm install @enigma-sh/sdk        <span class="com"># js / ts</span>
+<span class="prompt">$</span> pip install enigma-sdk            <span class="com"># python</span>
+<span class="prompt">$</span> cargo add enigma-sdk              <span class="com"># rust</span>
+<span class="prompt">$</span> go get github.com/enigma-sh/sdk   <span class="com"># go</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">02</div>
+            <div>
+              <div class="step-title">connect your Solana wallet</div>
+              <p class="doc-p">Sign in at <code>enigma.sh</code> with Phantom, Backpack, or email OTP. Your PDA vault is created on-chain automatically on first registration (small rent deposit ~0.002 SOL).</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">03</div>
+            <div>
+              <div class="step-title">register &amp; price your API</div>
+              <div class="code-wrap">
+                <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                <div class="code-block"><span class="kw">import</span> { <span class="cls">Enigma</span> } <span class="kw">from</span> <span class="str">'@enigma-sh/sdk'</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Enigma</span>({ privateKey: <span class="var">process</span>.env.<span class="var">ENIGMA_PRIVATE_KEY</span> });
+
+<span class="kw">const</span> <span class="var">api</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">register</span>({
+  name:            <span class="str">'weather'</span>,
+  upstream:        <span class="str">'https://weather-service.api.com'</span>,
+  pricePerRequest: <span class="num">0.005</span>,   <span class="com">// $0.005 USDC per call</span>
+  description:     <span class="str">'Real-time weather data'</span>,
+});
+
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">api</span>.proxyUrl);
+<span class="com">// → https://api.enigma.sh/alice/weather</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">04</div>
+            <div>
+              <div class="step-title">share your proxy URL &amp; earn</div>
+              <p class="doc-p">That's it. Callers pay on every request, you earn automatically. Revenue accrues in your PDA vault — collect whenever you like.</p>
+              <div class="code-wrap">
+                <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                <div class="code-block"><span class="kw">const</span> { <span class="var">usdc</span> } = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">balance</span>();
+<span class="com">// → 142.50</span>
+
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">collect</span>(); <span class="com">// sweeps to your wallet, atomic on-chain</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="qs-caller">
+        <div class="steps">
+          <div class="step-item">
+            <div class="step-num">01</div>
+            <div>
+              <div class="step-title">fund your account with USDC</div>
+              <p class="doc-p">You need USDC on Solana. See <a href="#wallet-setup">Wallet &amp; USDC Setup</a> for a step-by-step guide if you're new to Solana.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">02</div>
+            <div>
+              <div class="step-title">get an API key</div>
+              <p class="doc-p">Sign in at <code>enigma.sh</code>, go to <strong>Settings → API Keys</strong>, and generate a key. This key identifies your payment account on every proxied request.</p>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-num">03</div>
+            <div>
+              <div class="step-title">call any Enigma-proxied API</div>
+              <div class="code-wrap">
+                <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+                <div class="code-block"><span class="kw">import</span> { <span class="cls">Enigma</span> } <span class="kw">from</span> <span class="str">'@enigma-sh/sdk'</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Enigma</span>({ apiKey: <span class="var">process</span>.env.<span class="var">ENIGMA_API_KEY</span> });
+
+<span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">'alice/weather'</span>, {
+  path:   <span class="str">'/v1/now'</span>,
+  params: { city: <span class="str">'NYC'</span> },
+});
+
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">res</span>.data);    <span class="com">// → { temp: 72, unit: 'F' }</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">res</span>.cost);    <span class="com">// → { usdc: 0.005 }</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">res</span>.txHash);  <span class="com">// → solana tx signature</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── REGISTER AN API ─── -->
+    <div class="doc-section" id="register-api">
+      <div class="eyebrow">for providers</div>
+      <h1 class="doc-h1">Register an API</h1>
+      <p class="doc-lead">Register any HTTP endpoint as a paid, metered API. No code changes to your upstream required.</p>
+
+      <h2 class="doc-h2">Prerequisites</h2>
+      <ul class="checklist">
+        <li><span class="ck">✓</span> A Solana wallet (Phantom, Backpack, Solflare) or email OTP account</li>
+        <li><span class="ck">✓</span> ~0.005 SOL for transaction fees and PDA rent</li>
+        <li><span class="ck">✓</span> A publicly reachable HTTP endpoint (or tunneled via ngrok, cloudflare tunnel, etc.)</li>
+      </ul>
+
+      <h2 class="doc-h2">Via the dashboard</h2>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">sign in at enigma.sh</div>
+            <p class="doc-p">Connect your wallet or use email OTP. First sign-in creates your PDA vault on-chain automatically.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">click "Register API"</div>
+            <p class="doc-p">Enter a name (used in your proxy URL) and your upstream base URL. The name forms a permanent part of your proxy address — choose carefully.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">set a price per request</div>
+            <p class="doc-p">Enter a USDC amount. Set <code>0</code> for a free but metered API — useful for analytics or gating before a paid launch.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div>
+            <div class="step-title">copy your proxy URL</div>
+            <p class="doc-p">Your endpoint is live at <code>api.enigma.sh/{username}/{api-name}</code>. All sub-paths forward verbatim: <code>/alice/weather/v1/now</code> → <code>upstream.url/v1/now</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2">Via the SDK</h2>
+      <div class="code-wrap">
+        <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="kw">const</span> <span class="var">api</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">register</span>({
+  name:            <span class="str">'my-api'</span>,        <span class="com">// → api.enigma.sh/you/my-api</span>
+  upstream:        <span class="str">'https://…'</span>,
+  pricePerRequest: <span class="num">0.01</span>,           <span class="com">// USDC. 0 = free+metered</span>
+  description:     <span class="str">'What your API does'</span>,
+});
+
+<span class="com">// update price anytime — takes effect immediately</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'my-api'</span>).<span class="fn">setPrice</span>(<span class="num">0.005</span>);
+
+<span class="com">// pause / resume</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'my-api'</span>).<span class="fn">disable</span>();
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'my-api'</span>).<span class="fn">enable</span>();</div>
+      </div>
+
+      <div class="callout warn">
+        <strong>API names are permanent.</strong> The name in your proxy URL cannot be changed after registration. All on-chain state is seeded from it.
+      </div>
+    </div>
+
+    <!-- ─── PRICING & FEES ─── -->
+    <div class="doc-section" id="pricing-fees">
+      <div class="eyebrow">for providers</div>
+      <h1 class="doc-h1">Pricing &amp; Fees</h1>
+      <p class="doc-lead">You set the price. Enigma takes a small platform fee at collection time. Everything else goes directly to your wallet.</p>
+
+      <h2 class="doc-h2">Platform fee structure</h2>
+      <table class="doc-table">
+        <thead><tr><th>parameter</th><th>value</th><th>note</th></tr></thead>
+        <tbody>
+          <tr><td><code>platform_fee_bps</code></td><td>1000 bps (10%)</td><td>Deducted at collect time, not per-request</td></tr>
+          <tr><td><code>minimum_price</code></td><td>0 USDC</td><td>Free APIs are supported — pure metering with no fee taken</td></tr>
+          <tr><td><code>fee_destination</code></td><td>Enigma platform vault</td><td>Split happens atomically in <code>collect_balance</code> on-chain</td></tr>
+          <tr><td><code>payout_latency</code></td><td>~400ms</td><td>Solana finality. Collect whenever you want.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>Example:</strong> You charge $0.01/request. 1,000 calls = $10.00 in your PDA. On collect: you receive $9.00 USDC, Enigma receives $1.00.
+      </div>
+
+      <h2 class="doc-h2">Changing your price</h2>
+      <p class="doc-p">Price changes are instant — the next request is billed at the new rate. There is no migration, no notice period required.</p>
+      <div class="code-wrap">
+        <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'weather'</span>).<span class="fn">setPrice</span>(<span class="num">0.001</span>); <span class="com">// $0.001/req, effective immediately</span></div>
+      </div>
+    </div>
+
+    <!-- ─── COLLECTING REVENUE ─── -->
+    <div class="doc-section" id="collecting-revenue">
+      <div class="eyebrow">for providers</div>
+      <h1 class="doc-h1">Collecting Revenue</h1>
+      <p class="doc-lead">Your earnings accumulate in a Solana PDA vault. Sweep to your wallet at any time with a single call.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="com">// check your PDA balance</span>
+<span class="kw">const</span> { <span class="var">usdc</span> } = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">balance</span>();
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">usdc</span>); <span class="com">// → 142.50</span>
+
+<span class="com">// sweep to your wallet (net of 10% platform fee)</span>
+<span class="kw">const</span> <span class="var">tx</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">collect</span>();
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">tx</span>.signature); <span class="com">// solana tx hash</span>
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">tx</span>.received);  <span class="com">// → 128.25 USDC sent to your wallet</span></div>
+      </div>
+
+      <p class="doc-p">The <code>collect</code> call invokes <code>collect_balance</code> on-chain. In one atomic transaction: the platform fee goes to Enigma's vault, the remainder transfers to your wallet's USDC account. No minimum balance required — collect after one request or a thousand.</p>
+    </div>
+
+    <!-- ─── BUYER GUIDE ─── -->
+    <div class="doc-section" id="buyer-guide">
+      <div class="eyebrow">for callers</div>
+      <h1 class="doc-h1">Buyer Guide</h1>
+      <p class="doc-lead">Calling an Enigma-proxied API is nearly identical to calling the original — prepend the proxy URL, include your API key, and payment is handled automatically.</p>
+
+      <h2 class="doc-h2">URL pattern</h2>
+      <div class="code-wrap">
+        <div class="code-label">pattern <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block">https://api.enigma.sh/<span class="var">{provider}</span>/<span class="var">{api-name}</span>/<span class="var">{path}</span></div>
+      </div>
+      <p class="doc-p">Everything after the API name is forwarded verbatim — query params, headers, body, and HTTP method all pass through unchanged.</p>
+
+      <h2 class="doc-h2">With curl</h2>
+      <div class="code-wrap">
+        <div class="code-label">shell <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="prompt">$</span> curl https://api.enigma.sh/alice/weather/v1/now \
+    -H <span class="str">"X-Enigma-Key: enig_test_…"</span> \
+    -H <span class="str">"Accept: application/json"</span></div>
+      </div>
+
+      <h2 class="doc-h2">With the SDK</h2>
+      <div class="code-wrap">
+        <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">'alice/weather'</span>, {
+  path:    <span class="str">'/v1/forecast'</span>,
+  method:  <span class="str">'POST'</span>,
+  body:    { city: <span class="str">'NYC'</span>, days: <span class="num">7</span> },
+  headers: { <span class="str">'Accept-Language'</span>: <span class="str">'en'</span> },
+});
+
+<span class="com">// res.data   → parsed JSON from upstream</span>
+<span class="com">// res.status → upstream HTTP status code</span>
+<span class="com">// res.cost   → { usdc: 0.005 }</span>
+<span class="com">// res.txHash → on-chain settlement signature</span></div>
+      </div>
+
+      <h2 class="doc-h2">Agent &amp; script usage</h2>
+      <p class="doc-p">Enigma is designed for machine-to-machine payments. Pre-authorize a USDC spending cap per session to avoid per-request wallet signatures — ideal for AI agents, automated scripts, and pipelines.</p>
+      <div class="code-wrap">
+        <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="com">// authorize a spend limit for this session</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">authorize</span>({ maxSpend: <span class="num">10.00</span>, expiresIn: <span class="str">'1h'</span> });
+
+<span class="com">// subsequent calls draw from the authorization automatically</span>
+<span class="com">// no wallet pop-up, no per-call signing required</span>
+<span class="kw">const</span> <span class="var">r1</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">'alice/weather'</span>, { path: <span class="str">'/v1/now'</span> });
+<span class="kw">const</span> <span class="var">r2</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">'bob/geocode'</span>,   { path: <span class="str">'/v1/ip'</span>  });</div>
+      </div>
+    </div>
+
+    <!-- ─── WALLET SETUP ─── -->
+    <div class="doc-section" id="wallet-setup">
+      <div class="eyebrow">for callers</div>
+      <h1 class="doc-h1">Wallet &amp; USDC Setup</h1>
+      <p class="doc-lead">Enigma settles in USDC on Solana. Here's how to get set up if you're new to the ecosystem.</p>
+
+      <h2 class="doc-h2">Option A — Self-custody (recommended)</h2>
+      <div class="steps">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div>
+            <div class="step-title">install a Solana wallet</div>
+            <p class="doc-p">Phantom (<code>phantom.app</code>), Backpack, or Solflare all work with Enigma.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div>
+            <div class="step-title">get USDC on Solana</div>
+            <p class="doc-p">Buy SOL on Coinbase, Kraken, or Binance, then swap to USDC via Jupiter (<code>jup.ag</code>). Alternatively, bridge USDC from Ethereum using Wormhole or Circle's CCTP.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div>
+            <div class="step-title">connect to Enigma</div>
+            <p class="doc-p">Visit <code>enigma.sh</code>, click <strong>Connect Wallet</strong>, approve the connection. Your USDC balance will appear in the dashboard immediately.</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2">Option B — Email OTP</h2>
+      <p class="doc-p">Sign in with an email address — no wallet required. Enigma creates a Solana account for you. Transfer USDC from an external wallet to fund it.</p>
+      <div class="callout warn">
+        <strong>Note:</strong> Email OTP accounts are custodial in v0.1. For production use or large balances, connect your own wallet for full self-custody.
+      </div>
+    </div>
+
+    <!-- ─── SDK INSTALL ─── -->
+    <div class="doc-section" id="sdk-install">
+      <div class="eyebrow">sdk</div>
+      <h1 class="doc-h1">Installation</h1>
+      <p class="doc-lead">The Enigma SDK is available for JavaScript / TypeScript, Python, Rust, and Go. All packages are on the same release cadence.</p>
+
+      <div class="tabs" id="install-tabs">
+        <button class="tab-btn active" data-tab="inst-js">javascript</button>
+        <button class="tab-btn" data-tab="inst-py">python</button>
+        <button class="tab-btn" data-tab="inst-rs">rust</button>
+        <button class="tab-btn" data-tab="inst-go">go</button>
+      </div>
+      <div class="tab-content active" id="inst-js">
+        <div class="code-wrap">
+          <div class="code-label">terminal <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="prompt">$</span> npm install @enigma-sh/sdk
+<span class="com"># or</span>
+<span class="prompt">$</span> bun add @enigma-sh/sdk
+<span class="prompt">$</span> pnpm add @enigma-sh/sdk</div>
+        </div>
+        <p class="doc-p">Requires Node 18+ or Bun 1+. Full TypeScript types included.</p>
+      </div>
+      <div class="tab-content" id="inst-py">
+        <div class="code-wrap">
+          <div class="code-label">terminal <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="prompt">$</span> pip install enigma-sdk
+<span class="com"># or</span>
+<span class="prompt">$</span> poetry add enigma-sdk
+<span class="prompt">$</span> uv add enigma-sdk</div>
+        </div>
+        <p class="doc-p">Requires Python 3.10+. Async-first via <code>asyncio</code>; sync wrappers available.</p>
+      </div>
+      <div class="tab-content" id="inst-rs">
+        <div class="code-wrap">
+          <div class="code-label">Cargo.toml <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block">[dependencies]
+enigma-sdk = <span class="str">"0.1"</span>
+tokio      = { version = <span class="str">"1"</span>, features = [<span class="str">"full"</span>] }</div>
+        </div>
+        <p class="doc-p">Async-native with Tokio. MSRV: Rust 1.75.</p>
+      </div>
+      <div class="tab-content" id="inst-go">
+        <div class="code-wrap">
+          <div class="code-label">terminal <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="prompt">$</span> go get github.com/enigma-sh/sdk-go@latest</div>
+        </div>
+        <p class="doc-p">Requires Go 1.22+. Context-aware; all calls accept <code>context.Context</code>.</p>
+      </div>
+    </div>
+
+    <!-- ─── SDK PROVIDER ─── -->
+    <div class="doc-section" id="sdk-provider">
+      <div class="eyebrow">sdk</div>
+      <h1 class="doc-h1">Provider SDK</h1>
+      <p class="doc-lead">For API providers — registering endpoints, managing pricing, and collecting revenue.</p>
+
+      <div class="tabs" id="sprov-tabs">
+        <button class="tab-btn active" data-tab="sprov-js">javascript</button>
+        <button class="tab-btn" data-tab="sprov-py">python</button>
+        <button class="tab-btn" data-tab="sprov-rs">rust</button>
+        <button class="tab-btn" data-tab="sprov-go">go</button>
+      </div>
+      <div class="tab-content active" id="sprov-js">
+        <div class="code-wrap">
+          <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">import</span> { <span class="cls">Enigma</span> } <span class="kw">from</span> <span class="str">'@enigma-sh/sdk'</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Enigma</span>({ privateKey: <span class="var">process</span>.env.<span class="var">ENIGMA_PRIVATE_KEY</span> });
+
+<span class="com">// register</span>
+<span class="kw">const</span> <span class="var">api</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">register</span>({ name: <span class="str">'my-api'</span>, upstream: <span class="str">'https://…'</span>, pricePerRequest: <span class="num">0.01</span> });
+
+<span class="com">// list all your APIs</span>
+<span class="kw">const</span> <span class="var">apis</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">apis</span>();
+
+<span class="com">// update price</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'my-api'</span>).<span class="fn">setPrice</span>(<span class="num">0.005</span>);
+
+<span class="com">// disable / enable</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">'my-api'</span>).<span class="fn">disable</span>();
+
+<span class="com">// check balance</span>
+<span class="kw">const</span> { <span class="var">usdc</span> } = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">balance</span>();
+
+<span class="com">// collect to your wallet</span>
+<span class="kw">const</span> <span class="var">tx</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">collect</span>();</div>
+        </div>
+      </div>
+      <div class="tab-content" id="sprov-py">
+        <div class="code-wrap">
+          <div class="code-label">python <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">from</span> enigma <span class="kw">import</span> <span class="cls">Enigma</span>
+<span class="kw">import</span> os
+
+<span class="var">client</span> = <span class="cls">Enigma</span>(private_key=<span class="var">os</span>.environ[<span class="str">"ENIGMA_PRIVATE_KEY"</span>])
+
+<span class="com"># register</span>
+<span class="var">api</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">register</span>(name=<span class="str">"my-api"</span>, upstream=<span class="str">"https://…"</span>, price_per_request=<span class="num">0.01</span>)
+
+<span class="com"># update price</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">api</span>(<span class="str">"my-api"</span>).<span class="fn">set_price</span>(<span class="num">0.005</span>)
+
+<span class="com"># collect</span>
+<span class="var">balance</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">balance</span>()  <span class="com"># → { 'usdc': 142.5 }</span>
+<span class="var">tx</span>      = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">collect</span>()</div>
+        </div>
+      </div>
+      <div class="tab-content" id="sprov-rs">
+        <div class="code-wrap">
+          <div class="code-label">rust <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">use</span> enigma_sdk::{<span class="cls">Enigma</span>, <span class="cls">RegisterOptions</span>};
+
+<span class="kw">let</span> <span class="var">client</span> = <span class="cls">Enigma</span>::<span class="fn">new</span>(&<span class="var">private_key</span>);
+
+<span class="com">// register</span>
+<span class="kw">let</span> <span class="var">api</span> = <span class="var">client</span>.<span class="fn">register</span>(<span class="cls">RegisterOptions</span> {
+    name:              <span class="str">"my-api"</span>.<span class="fn">into</span>(),
+    upstream:          <span class="str">"https://…"</span>.<span class="fn">into</span>(),
+    price_per_request: <span class="num">0.01</span>,
+    ..Default::<span class="fn">default</span>()
+}).<span class="kw">await</span>?;
+
+<span class="com">// collect</span>
+<span class="kw">let</span> <span class="var">balance</span> = <span class="var">client</span>.<span class="fn">balance</span>().<span class="kw">await</span>?;
+<span class="kw">let</span> <span class="var">tx</span>      = <span class="var">client</span>.<span class="fn">collect</span>().<span class="kw">await</span>?;</div>
+        </div>
+      </div>
+      <div class="tab-content" id="sprov-go">
+        <div class="code-wrap">
+          <div class="code-label">go <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">import</span> (
+    enigma <span class="str">"github.com/enigma-sh/sdk-go"</span>
+    <span class="str">"os"</span>
+)
+
+<span class="var">client</span> := <span class="var">enigma</span>.<span class="fn">New</span>(<span class="var">os</span>.<span class="fn">Getenv</span>(<span class="str">"ENIGMA_PRIVATE_KEY"</span>))
+
+<span class="com">// register</span>
+<span class="var">api</span>, <span class="var">err</span> := <span class="var">client</span>.<span class="fn">Register</span>(<span class="var">enigma</span>.<span class="cls">RegisterOptions</span>{
+    Name:            <span class="str">"my-api"</span>,
+    Upstream:        <span class="str">"https://…"</span>,
+    PricePerRequest: <span class="num">0.01</span>,
+})
+
+<span class="com">// collect</span>
+<span class="var">tx</span>, <span class="var">err</span> := <span class="var">client</span>.<span class="fn">Collect</span>(<span class="var">ctx</span>)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SDK CALLER ─── -->
+    <div class="doc-section" id="sdk-caller">
+      <div class="eyebrow">sdk</div>
+      <h1 class="doc-h1">Caller SDK</h1>
+      <p class="doc-lead">For API consumers — calling paid endpoints with automatic payment handling.</p>
+
+      <div class="tabs" id="scall-tabs">
+        <button class="tab-btn active" data-tab="scall-js">javascript</button>
+        <button class="tab-btn" data-tab="scall-py">python</button>
+        <button class="tab-btn" data-tab="scall-rs">rust</button>
+        <button class="tab-btn" data-tab="scall-go">go</button>
+      </div>
+      <div class="tab-content active" id="scall-js">
+        <div class="code-wrap">
+          <div class="code-label">javascript <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">Enigma</span>({ apiKey: <span class="var">process</span>.env.<span class="var">ENIGMA_API_KEY</span> });
+
+<span class="com">// call a paid API</span>
+<span class="kw">const</span> <span class="var">res</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">'alice/weather'</span>, {
+  path:   <span class="str">'/v1/now'</span>,
+  params: { city: <span class="str">'NYC'</span> },
+});
+
+<span class="com">// pre-authorize a session spend limit (agent-friendly)</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">authorize</span>({ maxSpend: <span class="num">5.00</span>, expiresIn: <span class="str">'1h'</span> });
+
+<span class="com">// check usage</span>
+<span class="kw">const</span> <span class="var">usage</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">usage</span>({ since: <span class="str">'24h'</span> });
+<span class="com">// → { calls: 842, spent: { usdc: 4.21 } }</span></div>
+        </div>
+      </div>
+      <div class="tab-content" id="scall-py">
+        <div class="code-wrap">
+          <div class="code-label">python <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="var">client</span> = <span class="cls">Enigma</span>(api_key=<span class="var">os</span>.environ[<span class="str">"ENIGMA_API_KEY"</span>])
+
+<span class="com"># call a paid API</span>
+<span class="var">res</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">call</span>(<span class="str">"alice/weather"</span>, path=<span class="str">"/v1/now"</span>, params={<span class="str">"city"</span>: <span class="str">"NYC"</span>})
+<span class="fn">print</span>(<span class="var">res</span>.data)  <span class="com"># → {'temp': 72, 'unit': 'F'}</span>
+
+<span class="com"># authorize a spend cap</span>
+<span class="kw">await</span> <span class="var">client</span>.<span class="fn">authorize</span>(max_spend=<span class="num">5.00</span>, expires_in=<span class="str">"1h"</span>)
+
+<span class="com"># usage stats</span>
+<span class="var">usage</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">usage</span>(since=<span class="str">"24h"</span>)</div>
+        </div>
+      </div>
+      <div class="tab-content" id="scall-rs">
+        <div class="code-wrap">
+          <div class="code-label">rust <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="kw">let</span> <span class="var">client</span> = <span class="cls">Enigma</span>::<span class="fn">with_api_key</span>(&<span class="var">api_key</span>);
+
+<span class="kw">let</span> <span class="var">res</span> = <span class="var">client</span>.<span class="fn">call</span>(<span class="str">"alice/weather"</span>, <span class="cls">CallOptions</span> {
+    path:   <span class="str">"/v1/now"</span>.<span class="fn">into</span>(),
+    params: <span class="fn">hashmap!</span>{ <span class="str">"city"</span> => <span class="str">"NYC"</span> },
+    ..Default::<span class="fn">default</span>()
+}).<span class="kw">await</span>?;
+
+<span class="kw">let</span> <span class="var">usage</span> = <span class="var">client</span>.<span class="fn">usage</span>(<span class="cls">UsageOptions</span> { since: <span class="cls">Since</span>::Hours(<span class="num">24</span>) }).<span class="kw">await</span>?;</div>
+        </div>
+      </div>
+      <div class="tab-content" id="scall-go">
+        <div class="code-wrap">
+          <div class="code-label">go <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+          <div class="code-block"><span class="var">client</span> := <span class="var">enigma</span>.<span class="fn">WithAPIKey</span>(<span class="var">os</span>.<span class="fn">Getenv</span>(<span class="str">"ENIGMA_API_KEY"</span>))
+
+<span class="var">res</span>, <span class="var">err</span> := <span class="var">client</span>.<span class="fn">Call</span>(<span class="var">ctx</span>, <span class="str">"alice/weather"</span>, <span class="var">enigma</span>.<span class="cls">CallOptions</span>{
+    Path:   <span class="str">"/v1/now"</span>,
+    Params: <span class="kw">map</span>[<span class="cls">string</span>]<span class="cls">string</span>{<span class="str">"city"</span>: <span class="str">"NYC"</span>},
+})
+
+<span class="var">usage</span>, <span class="var">err</span> := <span class="var">client</span>.<span class="fn">Usage</span>(<span class="var">ctx</span>, <span class="var">enigma</span>.<span class="cls">UsageOptions</span>{Since: <span class="str">"24h"</span>})</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── SDK CONFIG ─── -->
+    <div class="doc-section" id="sdk-config">
+      <div class="eyebrow">sdk</div>
+      <h1 class="doc-h1">Configuration</h1>
+      <p class="doc-lead">All SDK clients share a common configuration interface.</p>
+
+      <table class="doc-table">
+        <thead><tr><th>option</th><th>type</th><th>description</th></tr></thead>
+        <tbody>
+          <tr><td><code>privateKey</code></td><td>string</td><td>Solana private key (base58). Required for provider operations. Never expose in client-side code.</td></tr>
+          <tr><td><code>apiKey</code></td><td>string</td><td>Enigma API key (<code>enig_live_…</code> or <code>enig_test_…</code>). Required for caller operations.</td></tr>
+          <tr><td><code>network</code></td><td><code>'devnet' | 'mainnet'</code></td><td>Defaults to <code>'devnet'</code>. Switch to <code>'mainnet'</code> at launch.</td></tr>
+          <tr><td><code>timeout</code></td><td>number (ms)</td><td>Request timeout applied to each proxied call. Default: <code>30000</code>.</td></tr>
+          <tr><td><code>retries</code></td><td>number</td><td>Retry count on upstream 5xx errors. Payment is refunded on retry. Default: <code>1</code>.</td></tr>
+          <tr><td><code>rpcUrl</code></td><td>string</td><td>Custom Solana RPC endpoint. Defaults to Enigma's managed RPC.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── API AUTH ─── -->
+    <div class="doc-section" id="api-auth">
+      <div class="eyebrow">api reference</div>
+      <h1 class="doc-h1">Authentication</h1>
+      <p class="doc-lead">All requests to the Enigma proxy and management API require an API key in the request header.</p>
+
+      <div class="code-wrap">
+        <div class="code-label">http header <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block">X-Enigma-Key: enig_live_<span class="var">your_key_here</span></div>
+      </div>
+
+      <p class="doc-p">API keys are account-scoped. Rotate or revoke them instantly from the dashboard under <strong>Settings → API Keys</strong>. Revoked keys return <code>401 Unauthorized</code> immediately — no propagation delay.</p>
+
+      <h2 class="doc-h2">Key prefixes</h2>
+      <table class="doc-table">
+        <thead><tr><th>prefix</th><th>environment</th><th>funds</th></tr></thead>
+        <tbody>
+          <tr><td><code>enig_live_</code></td><td>Mainnet</td><td>Real USDC</td></tr>
+          <tr><td><code>enig_test_</code></td><td>Devnet</td><td>Test tokens — no real value</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── API ENDPOINTS ─── -->
+    <div class="doc-section" id="api-endpoints">
+      <div class="eyebrow">api reference</div>
+      <h1 class="doc-h1">Endpoints</h1>
+      <p class="doc-lead">Base URL: <code>https://api.enigma.sh</code>. All management endpoints require <code>X-Enigma-Key</code>.</p>
+
+      <h2 class="doc-h2">Proxy</h2>
+      <div class="endpoint-row">
+        <span class="method get">ANY</span>
+        <div>
+          <div class="endpoint-path">/:provider/:api/*path</div>
+          <div class="endpoint-desc">Proxy a request to the upstream API. All HTTP methods (GET, POST, PUT, PATCH, DELETE) forwarded verbatim.</div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2">Provider management</h2>
+      <div class="endpoint-row">
+        <span class="method post">POST</span>
+        <div>
+          <div class="endpoint-path">/v1/apis</div>
+          <div class="endpoint-desc">Register a new API. Body: <code>{ name, upstream, price_per_request, description? }</code></div>
+        </div>
+      </div>
+      <div class="endpoint-row">
+        <span class="method get">GET</span>
+        <div>
+          <div class="endpoint-path">/v1/apis</div>
+          <div class="endpoint-desc">List all APIs registered to your account.</div>
+        </div>
+      </div>
+      <div class="endpoint-row">
+        <span class="method post">POST</span>
+        <div>
+          <div class="endpoint-path">/v1/apis/:name/price</div>
+          <div class="endpoint-desc">Update per-request price. Body: <code>{ price }</code> in USDC.</div>
+        </div>
+      </div>
+      <div class="endpoint-row">
+        <span class="method post">POST</span>
+        <div>
+          <div class="endpoint-path">/v1/collect</div>
+          <div class="endpoint-desc">Invoke <code>collect_balance</code> on-chain. Sweeps your PDA balance to your wallet, net of platform fee.</div>
+        </div>
+      </div>
+      <div class="endpoint-row">
+        <span class="method get">GET</span>
+        <div>
+          <div class="endpoint-path">/v1/balance</div>
+          <div class="endpoint-desc">Returns current PDA USDC balance. Response: <code>{ usdc: number }</code></div>
+        </div>
+      </div>
+
+      <h2 class="doc-h2">Caller</h2>
+      <div class="endpoint-row">
+        <span class="method get">GET</span>
+        <div>
+          <div class="endpoint-path">/v1/usage</div>
+          <div class="endpoint-desc">Usage and spend stats for your API key. Query: <code>?since=24h|7d|30d</code></div>
+        </div>
+      </div>
+      <div class="endpoint-row">
+        <span class="method post">POST</span>
+        <div>
+          <div class="endpoint-path">/v1/authorize</div>
+          <div class="endpoint-desc">Create a spend authorization for agent sessions. Body: <code>{ max_spend, expires_in }</code></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── TRUST MODEL ─── -->
+    <div class="doc-section" id="trust-model">
+      <div class="eyebrow">security</div>
+      <h1 class="doc-h1">Trust Model</h1>
+      <p class="doc-lead">Enigma is built on one principle: the platform should never be able to steal from its users.</p>
+
+      <h2 class="doc-h2">How funds flow</h2>
+      <p class="doc-p">When a caller pays for a request, USDC moves from their account directly into a program-derived token account (PDA) seeded by the developer's public key. At no point does USDC pass through Enigma's own wallet.</p>
+
+      <table class="doc-table">
+        <thead><tr><th>entity</th><th>can drain developer PDA?</th></tr></thead>
+        <tbody>
+          <tr><td>Enigma platform</td><td style="color:var(--dim);">no — no admin key exists</td></tr>
+          <tr><td>Other developers</td><td style="color:var(--dim);">no — PDA seeded by your key only</td></tr>
+          <tr><td>API callers</td><td style="color:var(--dim);">no — can only pay in, never withdraw</td></tr>
+          <tr><td>You (the developer)</td><td style="color:var(--accent);">yes — only you can invoke collect_balance</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>If Enigma goes offline:</strong> Your PDA and its USDC balance remain on-chain. You can invoke <code>collect_balance</code> directly via any Solana RPC — no Enigma infrastructure needed. The program is immutable once deployed.
+      </div>
+    </div>
+
+    <!-- ─── NON-CUSTODIAL ─── -->
+    <div class="doc-section" id="non-custodial">
+      <div class="eyebrow">security</div>
+      <h1 class="doc-h1">Non-Custodial Design</h1>
+      <p class="doc-lead">Every dollar you earn sits in a program-derived account (PDA) derived from your wallet address. The math that generates this address ensures only you can authorize a withdrawal.</p>
+
+      <h2 class="doc-h2">PDA seed derivation</h2>
+      <div class="code-wrap">
+        <div class="code-label">rust (on-chain) <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="com">// programs/enigma/src/instructions/collect_balance.rs</span>
+<span class="kw">#[account(</span>
+    seeds = <span class="str">[b"USER_DATA_SEEDS"</span>,
+             <span class="var">global_config</span>.<span class="fn">key</span>().<span class="fn">as_ref</span>(),
+             <span class="var">developer</span>.<span class="fn">key</span>().<span class="fn">as_ref</span>()], <span class="com">// your wallet pubkey</span>
+    bump   = <span class="var">user_data</span>.bump,
+    constraint = <span class="var">user_data</span>.dev == <span class="var">developer</span>.<span class="fn">key</span>()
+)]
+<span class="kw">pub</span> <span class="var">user_data</span>: <span class="cls">Account</span>&lt;<span class="fn">UserData</span>&gt;,
+
+<span class="com">// Only a signer derivable from these exact seeds can</span>
+<span class="com">// sign the transfer_checked CPI out of this account.</span>
+<span class="fn">transfer_checked</span>(
+    <span class="cls">CpiContext</span>::<span class="fn">new_with_signer</span>( <span class="var">token_program</span>,
+        <span class="cls">TransferChecked</span> { from: <span class="var">user_data_ata</span>, to: <span class="var">dev_ata</span>,
+                          authority: <span class="var">user_data</span>.<span class="fn">to_account_info</span>() },
+        <span class="var">signer_seeds</span>),
+    <span class="var">net</span>, <span class="var">mint</span>.decimals)?;</div>
+      </div>
+
+      <h2 class="doc-h2">Verify your PDA on-chain</h2>
+      <p class="doc-p">Inspect your PDA and its USDC balance at any time using any Solana RPC or explorer:</p>
+      <div class="code-wrap">
+        <div class="code-label">shell <button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-block"><span class="prompt">$</span> solana account <span class="var">YOUR_PDA_ADDRESS</span> --url devnet
+<span class="prompt">$</span> spl-token balance --address <span class="var">YOUR_PDA_ATA</span> --url devnet</div>
+      </div>
+
+      <p class="doc-p">The program ID is <code>7JNGV1YkP5mT1aQvZwrADAozdPdYmpFTAAin2EqroSJW</code> (devnet). Source code is publicly auditable on GitHub.</p>
+    </div>
+
+    <!-- ─── FAQ ─── -->
+    <div class="doc-section" id="faq">
+      <div class="eyebrow">faq</div>
+      <h1 class="doc-h1">FAQ</h1>
+
+      <div class="faq-item">
+        <div class="faq-q">Do I need to change my API code to use Enigma? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">No. Enigma is a proxy layer. Your upstream API receives requests exactly as before — it never knows Enigma is in the middle. No new dependencies, no middleware, no code changes.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens if my upstream API goes down? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">If the proxy receives a 5xx response from your upstream, the caller is automatically refunded. The USDC transfer is reverted before it settles. Enigma does not charge for failed requests.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can I offer a free tier alongside a paid tier? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Yes. Set <code>pricePerRequest: 0</code> for free-but-metered access. Register a separate API name for the paid version, or use the upcoming tiered pricing feature (Q3 roadmap) for rate-limited free + paid overages on one endpoint.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">How fast do I receive payment? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Payment settles inside the request cycle on Solana — typically ~400ms. Your PDA balance updates before the caller receives the response. Collect to your wallet anytime after that, instantly.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Can AI agents call Enigma-proxied APIs? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Yes — this is one of our primary use cases. Agents can use an API key (no wallet interaction needed) or pre-authorize a USDC spending limit per session via <code>client.authorize()</code>. No pop-ups, no friction.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is the platform fee negotiable? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">The current platform fee is 10% (1000 bps), set in the on-chain global config. For high-volume design partners, we're open to custom rates — reach out on Discord or directly after the pitch.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What blockchains are supported? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Solana only, currently. Settlement is in USDC (SPL token). An Ethereum / x402 protocol bridge is on the 90-day roadmap for cross-chain access.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is Enigma open source? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">The Anchor program is open source and verifiably deployed on-chain. The proxy server and dashboard are currently closed source. SDK source will be published at mainnet launch.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What happens to my funds if Enigma shuts down? <span class="faq-arrow">+</span></div>
+        <div class="faq-a">Nothing bad. Your PDA and its USDC balance live on-chain permanently. You can call <code>collect_balance</code> directly via any Solana RPC — no Enigma servers required. The program is immutable once deployed, and your funds are always recoverable.</div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<div class="scroll-fade"></div>
+
+<script>
+  const links   = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.doc-section');
+  const content  = document.getElementById('content');
+
+  // ── Sidebar navigation ──
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      const el = document.getElementById(link.dataset.target);
+      if (el) content.scrollTo({ top: el.offsetTop - 36, behavior: 'smooth' });
+    });
+  });
+
+  // ── Scrollspy ──
+  content.addEventListener('scroll', () => {
+    const scrollTop = content.scrollTop + 80;
+    let active = sections[0].id;
+    sections.forEach(s => { if (s.offsetTop <= scrollTop) active = s.id; });
+    links.forEach(l => l.classList.toggle('active', l.dataset.target === active));
+  });
+
+  // ── Tabs ──
+  document.querySelectorAll('.tabs').forEach(group => {
+    group.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.dataset.tab;
+        group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const parent = group.parentElement;
+        parent.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        const target = document.getElementById(tabId);
+        if (target) target.classList.add('active');
+      });
+    });
+  });
+
+  // ── Copy buttons ──
+  function copyCode(btn) {
+    const block = btn.closest('.code-wrap').querySelector('.code-block');
+    navigator.clipboard.writeText(block.innerText).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = orig, 1600);
+    });
+  }
+  window.copyCode = copyCode;
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+  });
+</script>
+</body>
+</html>
