@@ -1,0 +1,13 @@
+target
+node_modules
+ui
+.git
+.env
+.env.local
+test-ledger
+.anchor
+
+.env
+.env.*
+*.log
+.git
