@@ -24,6 +24,13 @@ const routes = {
     change_24h: 3.21,
     volume_24h: 1_200_000_000,
   }),
+
+  "GET /oracle/price": () => ({
+    symbol: "ETH",
+    price_usd: 142.37,
+    change_24h: 3.21,
+    volume_24h: 1_200_000_000,
+  }),
 };
 
 const server = http.createServer((req, res) => {
